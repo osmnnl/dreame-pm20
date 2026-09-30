@@ -1,0 +1,111 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Dreame AirPursue PM20",
+        "description": "Read-only integration. Use a secondary Dreame account that the PM20 is shared with; the password is stored in Home Assistant.",
+        "data": {
+          "username": "E-mail",
+          "password": "Password",
+          "region": "Server region"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate",
+        "data": {
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Wrong e-mail, password or region",
+      "cannot_connect": "Cannot reach the Dreame cloud",
+      "no_device": "No PM20 on this account in this region"
+    },
+    "abort": {
+      "already_configured": "This PM20 is already configured",
+      "reauth_successful": "Re-authentication successful"
+    }
+  },
+  "selector": {
+    "region": {
+      "options": {
+        "eu": "Europe",
+        "sg": "Singapore",
+        "ru": "Russia",
+        "us": "USA",
+        "kr": "Korea",
+        "cn": "China"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "pm25": {
+        "name": "PM2.5"
+      },
+      "pm10": {
+        "name": "PM10"
+      },
+      "pm1": {
+        "name": "PM1"
+      },
+      "hcho": {
+        "name": "Formaldehyde (HCHO)"
+      },
+      "tvoc": {
+        "name": "TVOC"
+      },
+      "temperature": {
+        "name": "Temperature"
+      },
+      "humidity": {
+        "name": "Humidity"
+      },
+      "air_quality": {
+        "name": "Air quality"
+      },
+      "dominant_pollutant": {
+        "name": "Dominant pollutant"
+      },
+      "mode": {
+        "name": "Mode"
+      },
+      "fan_level": {
+        "name": "Fan level"
+      },
+      "swing_angle": {
+        "name": "Swing angle"
+      },
+      "off_timer": {
+        "name": "Off timer"
+      },
+      "hepa_life": {
+        "name": "HEPA filter life"
+      },
+      "hepa_days": {
+        "name": "HEPA filter days left"
+      },
+      "carbon_life": {
+        "name": "Carbon filter life"
+      },
+      "carbon_days": {
+        "name": "Carbon filter days left"
+      },
+      "fault": {
+        "name": "Fault code"
+      }
+    },
+    "binary_sensor": {
+      "power": {
+        "name": "Running"
+      },
+      "follow": {
+        "name": "Follow me"
+      },
+      "auto_power_on": {
+        "name": "Radar auto start"
+      }
+    }
+  }
+}

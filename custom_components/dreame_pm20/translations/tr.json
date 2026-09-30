@@ -1,0 +1,111 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Dreame AirPursue PM20",
+        "description": "Salt okunur entegrasyon. PM20'nin paylaşıldığı yedek bir Dreame hesabı kullanın; parola Home Assistant'ta saklanır.",
+        "data": {
+          "username": "E-posta",
+          "password": "Parola",
+          "region": "Sunucu bölgesi"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Yeniden giriş",
+        "data": {
+          "password": "Parola"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "E-posta, parola ya da bölge hatalı",
+      "cannot_connect": "Dreame bulutuna ulaşılamıyor",
+      "no_device": "Bu hesapta, bu bölgede PM20 yok"
+    },
+    "abort": {
+      "already_configured": "Bu PM20 zaten ekli",
+      "reauth_successful": "Yeniden giriş başarılı"
+    }
+  },
+  "selector": {
+    "region": {
+      "options": {
+        "eu": "Avrupa",
+        "sg": "Singapur",
+        "ru": "Rusya",
+        "us": "ABD",
+        "kr": "Kore",
+        "cn": "Çin"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "pm25": {
+        "name": "PM2.5"
+      },
+      "pm10": {
+        "name": "PM10"
+      },
+      "pm1": {
+        "name": "PM1"
+      },
+      "hcho": {
+        "name": "Formaldehit (HCHO)"
+      },
+      "tvoc": {
+        "name": "TVOC"
+      },
+      "temperature": {
+        "name": "Sıcaklık"
+      },
+      "humidity": {
+        "name": "Nem"
+      },
+      "air_quality": {
+        "name": "Hava kalitesi"
+      },
+      "dominant_pollutant": {
+        "name": "Baskın kirletici"
+      },
+      "mode": {
+        "name": "Mod"
+      },
+      "fan_level": {
+        "name": "Fan seviyesi"
+      },
+      "swing_angle": {
+        "name": "Salınım açısı"
+      },
+      "off_timer": {
+        "name": "Kapanma zamanlayıcısı"
+      },
+      "hepa_life": {
+        "name": "HEPA filtre ömrü"
+      },
+      "hepa_days": {
+        "name": "HEPA filtre kalan gün"
+      },
+      "carbon_life": {
+        "name": "Karbon filtre ömrü"
+      },
+      "carbon_days": {
+        "name": "Karbon filtre kalan gün"
+      },
+      "fault": {
+        "name": "Arıza kodu"
+      }
+    },
+    "binary_sensor": {
+      "power": {
+        "name": "Çalışıyor"
+      },
+      "follow": {
+        "name": "Beni takip et"
+      },
+      "auto_power_on": {
+        "name": "Radarla otomatik başlama"
+      }
+    }
+  }
+}

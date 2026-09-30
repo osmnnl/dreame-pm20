@@ -1,0 +1,12 @@
+{
+  "domain": "dreame_pm20",
+  "name": "Dreame AirPursue PM20",
+  "codeowners": ["@osmnnl"],
+  "config_flow": true,
+  "documentation": "https://github.com/osmnnl/dreame-pm20",
+  "integration_type": "device",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/osmnnl/dreame-pm20/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
