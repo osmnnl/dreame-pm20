@@ -51,7 +51,7 @@
         "name": "PM1"
       },
       "hcho": {
-        "name": "Formaldehyde (HCHO)"
+        "name": "Formaldehyde"
       },
       "tvoc": {
         "name": "TVOC"
@@ -67,8 +67,8 @@
         "state": {
           "excellent": "Excellent",
           "good": "Good",
-          "moderate": "Moderate",
-          "poor": "Poor",
+          "mild_pollution": "Mild pollution",
+          "heavy_pollution": "Heavy pollution",
           "unknown": "Unknown"
         }
       },
@@ -76,35 +76,35 @@
         "name": "Dominant pollutant"
       },
       "mode": {
-        "name": "Mode",
+        "name": "Purification level",
         "state": {
           "auto": "Auto",
-          "custom": "Custom",
           "pet": "Pet",
           "comfort": "Comfort",
+          "custom": "Custom",
           "unknown": "Unknown"
         }
       },
       "fan_level": {
-        "name": "Fan level"
+        "name": "Airflow speed"
       },
       "swing_angle": {
-        "name": "Swing angle"
+        "name": "Horizontal swing"
       },
       "off_timer": {
-        "name": "Off timer"
+        "name": "Timer"
       },
       "hepa_life": {
-        "name": "HEPA filter life"
+        "name": "Composite filter life"
       },
       "hepa_days": {
-        "name": "HEPA filter days left"
+        "name": "Composite filter days left"
       },
       "carbon_life": {
-        "name": "Carbon filter life"
+        "name": "Carbon layer life"
       },
       "carbon_days": {
-        "name": "Carbon filter days left"
+        "name": "Carbon layer days left"
       },
       "fault": {
         "name": "Fault code"
@@ -115,7 +115,7 @@
         "name": "Running"
       },
       "follow": {
-        "name": "Follow me"
+        "name": "Directional air delivery"
       },
       "auto_power_on": {
         "name": "Radar auto start"

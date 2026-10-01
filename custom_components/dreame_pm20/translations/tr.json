@@ -51,7 +51,7 @@
         "name": "PM1"
       },
       "hcho": {
-        "name": "Formaldehit (HCHO)"
+        "name": "Formaldehit"
       },
       "tvoc": {
         "name": "TVOC"
@@ -67,8 +67,8 @@
         "state": {
           "excellent": "Mükemmel",
           "good": "İyi",
-          "moderate": "Orta",
-          "poor": "Kötü",
+          "mild_pollution": "Hafif kirlilik",
+          "heavy_pollution": "Ağır kirlilik",
           "unknown": "Bilinmiyor"
         }
       },
@@ -76,35 +76,35 @@
         "name": "Baskın kirletici"
       },
       "mode": {
-        "name": "Mod",
+        "name": "Arıtma seviyesi",
         "state": {
           "auto": "Otomatik",
-          "custom": "Özel",
           "pet": "Evcil Hayvan",
           "comfort": "Konfor",
+          "custom": "Özel",
           "unknown": "Bilinmiyor"
         }
       },
       "fan_level": {
-        "name": "Fan seviyesi"
+        "name": "Hava akış hızı"
       },
       "swing_angle": {
-        "name": "Salınım açısı"
+        "name": "Yatay salınım"
       },
       "off_timer": {
-        "name": "Kapanma zamanlayıcısı"
+        "name": "Zamanlayıcı"
       },
       "hepa_life": {
-        "name": "HEPA filtre ömrü"
+        "name": "Kompozit filtre ömrü"
       },
       "hepa_days": {
-        "name": "HEPA filtre kalan gün"
+        "name": "Kompozit filtre kalan gün"
       },
       "carbon_life": {
-        "name": "Karbon filtre ömrü"
+        "name": "Karbon katman ömrü"
       },
       "carbon_days": {
-        "name": "Karbon filtre kalan gün"
+        "name": "Karbon katman kalan gün"
       },
       "fault": {
         "name": "Arıza kodu"
@@ -115,7 +115,7 @@
         "name": "Çalışıyor"
       },
       "follow": {
-        "name": "Beni takip et"
+        "name": "Yönlü hava dağıtımı"
       },
       "auto_power_on": {
         "name": "Radarla otomatik başlama"
