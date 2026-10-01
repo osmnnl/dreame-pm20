@@ -65,5 +65,5 @@ PROPS: tuple[Prop, ...] = (
 
 PROP_BY_KEY = {p.key: p for p in PROPS}
 
-MODE_NAMES = {0: "auto", 3: "custom", 4: "pet", 5: "comfort"}
+MODE_NAMES = {0: "auto", 3: "custom", 4: "pet", 5: "comfort"}  # 0 and 3 confirmed on PM20 (2026-10-01)
 AIR_QUALITY_NAMES = {1: "excellent", 2: "good", 3: "moderate", 4: "poor"}

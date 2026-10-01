@@ -63,13 +63,27 @@
         "name": "Humidity"
       },
       "air_quality": {
-        "name": "Air quality"
+        "name": "Air quality",
+        "state": {
+          "excellent": "Excellent",
+          "good": "Good",
+          "moderate": "Moderate",
+          "poor": "Poor",
+          "unknown": "Unknown"
+        }
       },
       "dominant_pollutant": {
         "name": "Dominant pollutant"
       },
       "mode": {
-        "name": "Mode"
+        "name": "Mode",
+        "state": {
+          "auto": "Auto",
+          "custom": "Custom",
+          "pet": "Pet",
+          "comfort": "Comfort",
+          "unknown": "Unknown"
+        }
       },
       "fan_level": {
         "name": "Fan level"

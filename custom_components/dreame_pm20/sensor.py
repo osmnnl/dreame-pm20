@@ -37,24 +37,28 @@ class PM20SensorDescription(SensorEntityDescription):
 
 
 def _enum(names: dict[int, str]) -> Callable[[Any], Any]:
-    # Unknown values are shown as "value_<n>" so an unmapped mode is visible instead of hidden.
-    return lambda v: names.get(v, f"value_{v}") if isinstance(v, int) else None
+    # Unmapped values become "unknown"; the raw number stays visible in the "raw_value" attribute.
+    return lambda v: names.get(v, "unknown") if isinstance(v, int) else None
 
 
 SENSORS: tuple[PM20SensorDescription, ...] = (
     PM20SensorDescription(key="pm25", off_in_standby=True, device_class=SensorDeviceClass.PM25, native_unit_of_measurement=_UG, state_class=_M),
     PM20SensorDescription(key="pm10", off_in_standby=True, device_class=SensorDeviceClass.PM10, native_unit_of_measurement=_UG, state_class=_M),
     PM20SensorDescription(key="pm1", off_in_standby=True, device_class=SensorDeviceClass.PM1, native_unit_of_measurement=_UG, state_class=_M),
-    PM20SensorDescription(key="hcho", off_in_standby=True, native_unit_of_measurement=_UG, state_class=_M),
+    # The device reports µg/m³; the Dreamehome app shows mg/m³, so do the same.
+    PM20SensorDescription(key="hcho", off_in_standby=True, native_unit_of_measurement="mg/m³", state_class=_M,
+                          suggested_display_precision=2,
+                          value=lambda v: round(v / 1000, 3) if isinstance(v, (int, float)) else None),
     PM20SensorDescription(key="tvoc", native_unit_of_measurement=_UG, state_class=_M),
     PM20SensorDescription(key="temperature", off_in_standby=True, device_class=SensorDeviceClass.TEMPERATURE,
                           native_unit_of_measurement=UnitOfTemperature.CELSIUS, state_class=_M),
     PM20SensorDescription(key="humidity", off_in_standby=True, device_class=SensorDeviceClass.HUMIDITY,
                           native_unit_of_measurement=PERCENTAGE, state_class=_M),
-    # Not an ENUM sensor on purpose: only levels 1-2 are confirmed, unknown values must not raise.
-    PM20SensorDescription(key="air_quality", value=_enum(AIR_QUALITY_NAMES)),
+    PM20SensorDescription(key="air_quality", device_class=SensorDeviceClass.ENUM,
+                          options=[*AIR_QUALITY_NAMES.values(), "unknown"], value=_enum(AIR_QUALITY_NAMES)),
     PM20SensorDescription(key="dominant_pollutant", entity_registry_enabled_default=False),
-    PM20SensorDescription(key="mode", value=_enum(MODE_NAMES)),
+    PM20SensorDescription(key="mode", device_class=SensorDeviceClass.ENUM,
+                          options=[*MODE_NAMES.values(), "unknown"], value=_enum(MODE_NAMES)),
     PM20SensorDescription(key="fan_level", state_class=_M),
     PM20SensorDescription(key="swing_angle", native_unit_of_measurement="°"),
     PM20SensorDescription(key="off_timer", native_unit_of_measurement=UnitOfTime.HOURS),
@@ -77,6 +81,12 @@ class PM20Sensor(PM20Entity, SensorEntity):
     def __init__(self, coordinator, description: PM20SensorDescription) -> None:
         super().__init__(coordinator, description.key)
         self.entity_description = description
+
+    @property
+    def extra_state_attributes(self):
+        if self.entity_description.device_class == SensorDeviceClass.ENUM:
+            return {"raw_value": self.raw}
+        return None
 
     @property
     def native_value(self):

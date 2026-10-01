@@ -63,13 +63,27 @@
         "name": "Nem"
       },
       "air_quality": {
-        "name": "Hava kalitesi"
+        "name": "Hava kalitesi",
+        "state": {
+          "excellent": "Mükemmel",
+          "good": "İyi",
+          "moderate": "Orta",
+          "poor": "Kötü",
+          "unknown": "Bilinmiyor"
+        }
       },
       "dominant_pollutant": {
         "name": "Baskın kirletici"
       },
       "mode": {
-        "name": "Mod"
+        "name": "Mod",
+        "state": {
+          "auto": "Otomatik",
+          "custom": "Özel",
+          "pet": "Evcil Hayvan",
+          "comfort": "Konfor",
+          "unknown": "Bilinmiyor"
+        }
       },
       "fan_level": {
         "name": "Fan seviyesi"
