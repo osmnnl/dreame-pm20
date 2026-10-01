@@ -74,7 +74,7 @@ EXTRA_ADDRESSES: tuple[tuple[int, int], ...] = (
 # TEMPORARY debug sweep (read-only) to locate the heating timer and follow addresses.
 _KNOWN = {(p.siid, p.piid) for p in PROPS} | set(EXTRA_ADDRESSES)
 DEBUG_ADDRESSES: tuple[tuple[int, int], ...] = tuple(
-    (s, p) for s in range(2, 9) for p in range(1, 31) if (s, p) not in _KNOWN)
+    (s, p) for s in (2, 6) for p in range(31, 61) if (s, p) not in _KNOWN)
 
 MODE_NAMES = {0: "auto", 3: "custom", 4: "pet", 5: "comfort"}  # 0, 3, 5 confirmed on PM20 (2026-10-01)
 # Levels as named in the PM20 manual: excellent, good, mild pollution, heavy pollution.
