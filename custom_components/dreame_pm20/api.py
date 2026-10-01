@@ -33,13 +33,15 @@ _PORT = 13267
 _TIMEOUT = aiohttp.ClientTimeout(total=15)
 _ALLOWED_METHODS = frozenset({"get_properties", "set_properties", "action"})
 
-# Only these (siid, piid) -> values may ever be written. Shapes confirmed on the
-# sibling PM30 (u2403) and FP10; heater candidates 2,5 / 2,6 are NOT here.
+# Only these (siid, piid) -> values may ever be written. Shapes confirmed on a real PM20
+# (2026-10-01). 2,6 (heat target) is writable only within 16-26 °C or -1 (off).
 WRITABLE: dict[tuple[int, int], frozenset] = {
     (2, 3): frozenset({0, 3, 4, 5}),          # mode: smart / custom / pet / comfort
     (2, 4): frozenset(range(1, 11)),          # fan speed 1-10 (written together with 2,3=3)
     (2, 7): frozenset({0, 45, 90, 180}),      # swing angle
     (6, 20): frozenset({0, 1}),               # follow
+    # Heat target (-1 = off). Only written by climate.py, which enforces its own guards.
+    (2, 6): frozenset({-1, *range(16, 27)}),
 }
 # Parameterised power action: siid 2 / aiid 1, in piid 1 = 1 (on) / 0 (standby).
 ACTIONS: dict[tuple[int, int], frozenset] = {(2, 1): frozenset({0, 1})}

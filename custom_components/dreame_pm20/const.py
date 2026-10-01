@@ -71,10 +71,15 @@ EXTRA_ADDRESSES: tuple[tuple[int, int], ...] = (
     (1, 5), (2, 5), (2, 6), (2, 8), (3, 9), (3, 11), (3, 12),
     (6, 1), (6, 2), (6, 3), (6, 4), (6, 7), (6, 14), (6, 15),
 )
-# TEMPORARY debug sweep (read-only) to locate the heating timer and follow addresses.
-_KNOWN = {(p.siid, p.piid) for p in PROPS} | set(EXTRA_ADDRESSES)
-DEBUG_ADDRESSES: tuple[tuple[int, int], ...] = tuple(
-    (s, p) for s in (2, 6) for p in range(31, 61) if (s, p) not in _KNOWN)
+# Heater (confirmed 2026-10-01 by app diffs): 2,6 = heat target °C, -1 = heating off.
+HEAT_TARGET = (2, 6)
+HEAT_OFF = -1
+HEAT_MIN_C = 16
+HEAT_MAX_C = 26            # our own cap; the device allows up to 40 °C
+HEAT_MAX_MINUTES = 120     # auto-off after this long
+CONF_ALLOW_HEATER = "allow_heater"
+CONF_PRESENCE_ENTITY = "presence_entity"
+DEFAULT_PRESENCE_ENTITY = "zone.home"
 
 MODE_NAMES = {0: "auto", 3: "custom", 4: "pet", 5: "comfort"}  # 0, 3, 5 confirmed on PM20 (2026-10-01)
 # Levels as named in the PM20 manual: excellent, good, mild pollution, heavy pollution.

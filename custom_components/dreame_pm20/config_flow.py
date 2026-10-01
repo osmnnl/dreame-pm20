@@ -6,13 +6,15 @@ from typing import Any
 
 import voluptuous as vol
 
-from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
+from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig
+from homeassistant.core import callback
+from homeassistant.helpers.selector import EntitySelector, EntitySelectorConfig, SelectSelector, SelectSelectorConfig
 
 from .api import DreameAuthError, DreameCloud, DreameError
-from .const import CONF_REGION, DEFAULT_REGION, DOMAIN, MODEL, REGIONS
+from .const import (CONF_ALLOW_HEATER, CONF_PRESENCE_ENTITY, CONF_REGION, DEFAULT_PRESENCE_ENTITY, DEFAULT_REGION,
+                    DOMAIN, MODEL, REGIONS)
 
 
 def _schema(username: str = "", region: str = DEFAULT_REGION) -> vol.Schema:
@@ -26,6 +28,11 @@ def _schema(username: str = "", region: str = DEFAULT_REGION) -> vol.Schema:
 
 class PM20ConfigFlow(ConfigFlow, domain=DOMAIN):
     VERSION = 1
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
+        return PM20OptionsFlow()
 
     async def _find_pm20(self, data: dict[str, Any]) -> dict[str, Any]:
         cloud = DreameCloud(async_get_clientsession(self.hass), data[CONF_USERNAME],
@@ -71,3 +78,17 @@ class PM20ConfigFlow(ConfigFlow, domain=DOMAIN):
                 return self.async_update_reload_and_abort(entry, data=data)
         return self.async_show_form(step_id="reauth_confirm",
                                     data_schema=vol.Schema({vol.Required(CONF_PASSWORD): str}), errors=errors)
+
+
+class PM20OptionsFlow(OptionsFlow):
+    """Heater control is opt-in. Off by default."""
+
+    async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        if user_input is not None:
+            return self.async_create_entry(data=user_input)
+        opts = self.config_entry.options
+        return self.async_show_form(step_id="init", data_schema=vol.Schema({
+            vol.Required(CONF_ALLOW_HEATER, default=opts.get(CONF_ALLOW_HEATER, False)): bool,
+            vol.Required(CONF_PRESENCE_ENTITY, default=opts.get(CONF_PRESENCE_ENTITY, DEFAULT_PRESENCE_ENTITY)):
+                EntitySelector(EntitySelectorConfig(domain=["zone", "person", "device_tracker", "binary_sensor"])),
+        }))

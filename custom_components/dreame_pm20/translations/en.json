@@ -150,6 +150,11 @@
           "180": "180°"
         }
       }
+    },
+    "climate": {
+      "heater": {
+        "name": "Heater"
+      }
     }
   },
   "exceptions": {
@@ -158,6 +163,21 @@
     },
     "write_failed": {
       "message": "PM20 rejected the command: {error}"
+    },
+    "heater_disabled": "Heater control from Home Assistant is disabled. Enable it in the integration options.",
+    "heater_nobody_home": "Not turning the heater on: nobody is home.",
+    "heater_device_off": "Turn the PM20 on first."
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "PM20 options",
+        "description": "Heater control is off by default. When enabled, heating can only be turned on while someone is home, is capped at 26 °C and switches off automatically after 2 hours or when everyone leaves.",
+        "data": {
+          "allow_heater": "Allow heater control from Home Assistant",
+          "presence_entity": "Presence entity (zone.home = someone home)"
+        }
+      }
     }
   }
 }

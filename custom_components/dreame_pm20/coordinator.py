@@ -11,7 +11,7 @@ from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import DreameAuthError, DreameCloud, DreameError
-from .const import DEBUG_ADDRESSES, DOMAIN, EXTRA_ADDRESSES, PROPS, SCAN_INTERVAL
+from .const import DOMAIN, EXTRA_ADDRESSES, PROPS, SCAN_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,7 +26,6 @@ class PM20Coordinator(DataUpdateCoordinator[dict[str, Any]]):
         self.did = str(device["did"])
         self.bind_domain = device.get("bindDomain")
         self._addresses = [(p.siid, p.piid) for p in PROPS] + list(EXTRA_ADDRESSES)
-        self._debug_left = 3  # read DEBUG_ADDRESSES on the next few polls only (not during first refresh)
         # key -> (value, expires_at). The cloud lags the device by up to minutes after a
         # write, so keep the written value until a poll agrees or it expires.
         self._optimistic: dict[str, tuple[object, float]] = {}
@@ -58,17 +57,13 @@ class PM20Coordinator(DataUpdateCoordinator[dict[str, Any]]):
         for prop in PROPS:
             if (prop.siid, prop.piid) in raw:
                 data[prop.key] = raw[(prop.siid, prop.piid)]
-        if self._debug_left > 0 and self.data is not None:
-            self._debug_left -= 1
-            try:
-                dbg = await self.cloud.get_properties(self.did, self.bind_domain, list(DEBUG_ADDRESSES))
-                data["debug"] = {f"{s},{p}": v for (s, p), v in sorted(dbg.items())}
-            except DreameError:
-                pass
         raw_extra = dict(data.get("raw") or {})
         raw_extra.update({f"{s},{p}": v for (s, p), v in raw.items() if (s, p) in EXTRA_ADDRESSES})
         data["raw"] = raw_extra
+        if (2, 6) in raw:
+            data["heat_target"] = raw[(2, 6)]
         now = time.monotonic()
+        data.pop("debug", None)
         for key, (val, exp) in list(self._optimistic.items()):
             if now > exp or data.get(key) == val:
                 del self._optimistic[key]

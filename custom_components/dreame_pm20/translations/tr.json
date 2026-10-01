@@ -150,6 +150,11 @@
           "180": "180°"
         }
       }
+    },
+    "climate": {
+      "heater": {
+        "name": "Isıtma"
+      }
     }
   },
   "exceptions": {
@@ -158,6 +163,21 @@
     },
     "write_failed": {
       "message": "PM20 komutu reddetti: {error}"
+    },
+    "heater_disabled": "Isıtıcıyı HA'dan kontrol etme kapalı. Entegrasyon seçeneklerinden açın.",
+    "heater_nobody_home": "Isıtıcı açılmadı: evde kimse yok.",
+    "heater_device_off": "Önce PM20'yi açın."
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "PM20 seçenekleri",
+        "description": "Isıtıcı kontrolü varsayılan olarak kapalıdır. Açılırsa ısıtma sadece evde biri varken açılabilir, en fazla 26 °C olur ve 2 saat sonra ya da herkes evden çıkınca kendiliğinden kapanır.",
+        "data": {
+          "allow_heater": "Isıtıcıyı HA'dan kontrol etmeye izin ver",
+          "presence_entity": "Varlık varlığı (zone.home = evde biri var)"
+        }
+      }
     }
   }
 }

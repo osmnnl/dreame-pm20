@@ -1,4 +1,4 @@
-"""Dreame AirPursue PM20 Home Assistant integration (heater is never controlled)."""
+"""Dreame AirPursue PM20 Home Assistant integration (heater control is opt-in and guarded)."""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -13,7 +13,7 @@ from .api import DreameAuthError, DreameCloud, DreameError
 from .const import CONF_REGION, MODEL
 from .coordinator import PM20Coordinator
 
-PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.FAN, Platform.SELECT]
+PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.FAN, Platform.SELECT, Platform.CLIMATE]
 
 
 @dataclass
@@ -43,7 +43,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: PM20ConfigEntry) -> bool
     await coordinator.async_config_entry_first_refresh()
     entry.runtime_data = PM20Data(coordinator)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    entry.async_on_unload(entry.add_update_listener(_options_updated))
     return True
+
+
+async def _options_updated(hass: HomeAssistant, entry: PM20ConfigEntry) -> None:
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: PM20ConfigEntry) -> bool:

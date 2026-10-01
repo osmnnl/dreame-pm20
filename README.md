@@ -9,8 +9,8 @@ Unofficial Home Assistant integration for the Dreame AirPursue PM20 air purifier
   - **Filters:** HEPA and carbon filter life and days left
 - **Control (v0.3, verified on a real PM20, fw 1.8.17_1070):** a fan entity (power, speed 1–10, presets Smart purification / Pet cleaning / Comfort) and a swing select (Off / Follow / 45° / 90° / 180°).
   - Writes are limited to a strict allow-list; everything else is refused before a request is sent.
-  - **The heater is never controlled.** Heater-related addresses are not in the allow-list.
-  - Because the PM20 resumes its last settings on power-up, turning it on from Home Assistant is refused unless both heater-candidate properties read "off".
+  - Because the PM20 resumes its last settings on power-up, turning it on from Home Assistant is refused unless heating reads "off".
+- **Heater (v0.4, opt-in, guarded):** a climate entity (Off / Heat, 16–26 °C). Disabled until you enable "Allow heater control" in the integration options. Heating is refused when nobody is home (presence entity, default `zone.home`), is switched off automatically after 2 hours, when everyone leaves, and at startup if nobody is home. Turning off is always allowed. Property 2,6 = heat target in °C, -1 = off.
 
 ## Install
 1. In HACS, open ⋮ → Custom repositories, add `https://github.com/osmnnl/dreame-pm20` with category **Integration**, and install it.
