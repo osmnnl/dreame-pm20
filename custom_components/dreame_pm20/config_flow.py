@@ -50,7 +50,7 @@ class PM20ConfigFlow(ConfigFlow, domain=DOMAIN):
             else:
                 await self.async_set_unique_id(str(dev["did"]))
                 self._abort_if_unique_id_configured()
-                return self.async_create_entry(title=dev.get("customName") or "PM20", data=user_input)
+                return self.async_create_entry(title=dev.get("customName") or "Dreame AirPursue PM20", data=user_input)
         return self.async_show_form(step_id="user", data_schema=_schema(), errors=errors)
 
     async def async_step_reauth(self, entry_data: Mapping[str, Any]) -> ConfigFlowResult:

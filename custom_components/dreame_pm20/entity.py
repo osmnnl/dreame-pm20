@@ -24,7 +24,7 @@ class PM20Entity(CoordinatorEntity[PM20Coordinator]):
             manufacturer=MANUFACTURER,
             model="AirPursue PM20",
             model_id=MODEL,
-            name=dev.get("customName") or "PM20",
+            name=dev.get("customName") or "Dreame AirPursue PM20",
             sw_version=str((coordinator.data or {}).get("firmware", "")).strip('"') or None,
         )
 
