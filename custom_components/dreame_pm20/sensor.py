@@ -12,9 +12,9 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.const import (
-    CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
     PERCENTAGE,
     EntityCategory,
+    UnitOfDensity,
     UnitOfTemperature,
     UnitOfTime,
 )
@@ -24,13 +24,16 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from .const import AIR_QUALITY_NAMES, MODE_NAMES
 from .entity import PM20Entity
 
-_UG = CONCENTRATION_MICROGRAMS_PER_CUBIC_METER
+_UG = UnitOfDensity.MICROGRAMS_PER_CUBIC_METER
 _M = SensorStateClass.MEASUREMENT
 
 
 @dataclass(frozen=True, kw_only=True)
 class PM20SensorDescription(SensorEntityDescription):
     value: Callable[[Any], Any] = lambda v: v
+    # In standby (power == 2) the PM20 switches its air sensors off and reports 0.
+    # Show "unknown" instead of a misleading 0 °C / 0 µg/m³.
+    off_in_standby: bool = False
 
 
 def _enum(names: dict[int, str]) -> Callable[[Any], Any]:
@@ -39,14 +42,14 @@ def _enum(names: dict[int, str]) -> Callable[[Any], Any]:
 
 
 SENSORS: tuple[PM20SensorDescription, ...] = (
-    PM20SensorDescription(key="pm25", device_class=SensorDeviceClass.PM25, native_unit_of_measurement=_UG, state_class=_M),
-    PM20SensorDescription(key="pm10", device_class=SensorDeviceClass.PM10, native_unit_of_measurement=_UG, state_class=_M),
-    PM20SensorDescription(key="pm1", device_class=SensorDeviceClass.PM1, native_unit_of_measurement=_UG, state_class=_M),
-    PM20SensorDescription(key="hcho", native_unit_of_measurement=_UG, state_class=_M),
+    PM20SensorDescription(key="pm25", off_in_standby=True, device_class=SensorDeviceClass.PM25, native_unit_of_measurement=_UG, state_class=_M),
+    PM20SensorDescription(key="pm10", off_in_standby=True, device_class=SensorDeviceClass.PM10, native_unit_of_measurement=_UG, state_class=_M),
+    PM20SensorDescription(key="pm1", off_in_standby=True, device_class=SensorDeviceClass.PM1, native_unit_of_measurement=_UG, state_class=_M),
+    PM20SensorDescription(key="hcho", off_in_standby=True, native_unit_of_measurement=_UG, state_class=_M),
     PM20SensorDescription(key="tvoc", native_unit_of_measurement=_UG, state_class=_M),
-    PM20SensorDescription(key="temperature", device_class=SensorDeviceClass.TEMPERATURE,
+    PM20SensorDescription(key="temperature", off_in_standby=True, device_class=SensorDeviceClass.TEMPERATURE,
                           native_unit_of_measurement=UnitOfTemperature.CELSIUS, state_class=_M),
-    PM20SensorDescription(key="humidity", device_class=SensorDeviceClass.HUMIDITY,
+    PM20SensorDescription(key="humidity", off_in_standby=True, device_class=SensorDeviceClass.HUMIDITY,
                           native_unit_of_measurement=PERCENTAGE, state_class=_M),
     # Not an ENUM sensor on purpose: only levels 1-2 are confirmed, unknown values must not raise.
     PM20SensorDescription(key="air_quality", value=_enum(AIR_QUALITY_NAMES)),
@@ -77,4 +80,6 @@ class PM20Sensor(PM20Entity, SensorEntity):
 
     @property
     def native_value(self):
+        if self.entity_description.off_in_standby and (self.coordinator.data or {}).get("power") == 2:
+            return None
         return self.entity_description.value(self.raw)
