@@ -1,13 +1,16 @@
-# Dreame AirPursue PM20 for Home Assistant (read-only, v0.1)
+# Dreame AirPursue PM20 for Home Assistant
 
-Unofficial, **read-only** Home Assistant integration for the Dreame AirPursue PM20 air purifier (`dreame.airp.u2402`). It is not affiliated with Dreame.
+Unofficial Home Assistant integration for the Dreame AirPursue PM20 air purifier (`dreame.airp.u2402`). It is not affiliated with Dreame.
 
 ## What it does
 - It polls the Dreame cloud every 30 s and exposes these entities:
   - **Sensors:** PM2.5, PM10, PM1, HCHO, TVOC, temperature, humidity, air quality level, dominant pollutant
   - **Device state:** mode, fan level, swing angle, off timer, running, follow-me, radar auto start
   - **Filters:** HEPA and carbon filter life and days left
-- **It never writes to the device.** The API client refuses every RPC method except `get_properties`, so there is no power, mode, fan or **heater** control. Heater-related properties are intentionally not read.
+- **Control (v0.3, experimental):** a fan entity (power, speed 1–10, presets Smart purification / Pet cleaning / Comfort) and a swing select (Off / Follow / 45° / 90° / 180°).
+  - Writes are limited to a strict allow-list; everything else is refused before a request is sent.
+  - **The heater is never controlled.** Heater-related addresses are not in the allow-list.
+  - Because the PM20 resumes its last settings on power-up, turning it on from Home Assistant is refused unless both heater-candidate properties read "off".
 
 ## Install
 1. In HACS, open ⋮ → Custom repositories, add `https://github.com/osmnnl/dreame-pm20` with category **Integration**, and install it.

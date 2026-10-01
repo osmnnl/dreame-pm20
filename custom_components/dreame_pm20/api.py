@@ -5,8 +5,9 @@ extracted from the Dreamehome app by the community; they are documented in
 KalfDmytro/dreame-pm30-integration (MIT) ``api/protocol.py``. This file is an
 independent re-implementation.
 
-Safety: ``_rpc`` refuses every method except ``get_properties``. There is no
-code path that writes a property or calls an action.
+Safety: writes are limited to an explicit allow-list (``WRITABLE`` /
+``ACTIONS``). Anything else - including every heater-related address - is
+refused before a request is sent.
 """
 from __future__ import annotations
 
@@ -30,7 +31,18 @@ _USER_AGENT = "Dreame_Smarthome/2.1.9 (iPhone; iOS 18.4.1; Scale/3.00)"
 _DEFAULT_TENANT = "000000"
 _PORT = 13267
 _TIMEOUT = aiohttp.ClientTimeout(total=15)
-_ALLOWED_METHODS = frozenset({"get_properties"})
+_ALLOWED_METHODS = frozenset({"get_properties", "set_properties", "action"})
+
+# Only these (siid, piid) -> values may ever be written. Shapes confirmed on the
+# sibling PM30 (u2403) and FP10; heater candidates 2,5 / 2,6 are NOT here.
+WRITABLE: dict[tuple[int, int], frozenset] = {
+    (2, 3): frozenset({0, 3, 4, 5}),          # mode: smart / custom / pet / comfort
+    (2, 4): frozenset(range(1, 11)),          # fan speed 1-10 (written together with 2,3=3)
+    (2, 7): frozenset({0, 45, 90, 180}),      # swing angle
+    (6, 20): frozenset({0, 1}),               # follow
+}
+# Parameterised power action: siid 2 / aiid 1, in piid 1 = 1 (on) / 0 (standby).
+ACTIONS: dict[tuple[int, int], frozenset] = {(2, 1): frozenset({0, 1})}
 _CODE_DEVICE_TIMEOUT = 80001
 
 _ids = itertools.count(int(time.time()) % 100000)
@@ -122,7 +134,7 @@ class DreameCloud:
     # ── read-only RPC ─────────────────────────────────────────────────
     async def _rpc(self, did: str, bind_domain: str | None, method: str, params: list) -> Any:
         if method not in _ALLOWED_METHODS:
-            raise DreameError(f"method {method!r} is not allowed: this integration is read-only")
+            raise DreameError(f"method {method!r} is not allowed")
         shard = f"-{bind_domain.split('.')[0]}" if bind_domain else ""
         for delay in (1, 3, None):
             rid = next(_ids)  # must be unique, or replies get crossed
@@ -160,3 +172,22 @@ class DreameCloud:
                 if isinstance(entry, dict) and entry.get("code") == 0 and entry.get("value") is not None:
                     out[(entry["siid"], entry["piid"])] = entry["value"]
         return out
+
+    async def set_properties(self, did: str, bind_domain: str | None, values: dict[tuple[int, int], int]) -> None:
+        """Atomically write allow-listed properties; raise if anything is not allowed or fails."""
+        for addr, val in values.items():
+            if addr not in WRITABLE or val not in WRITABLE[addr]:
+                raise DreameError(f"write {addr}={val!r} is not allowed")
+        params = [{"did": str(did), "siid": s, "piid": p, "value": v} for (s, p), v in values.items()]
+        result = await self._rpc(did, bind_domain, "set_properties", params)
+        bad = [r for r in (result or []) if isinstance(r, dict) and r.get("code") not in (0, None)]
+        if not isinstance(result, list) or bad:
+            raise DreameError(f"device rejected write: {result!r}")
+
+    async def call_action(self, did: str, bind_domain: str | None, siid: int, aiid: int, value: int) -> None:
+        if (siid, aiid) not in ACTIONS or value not in ACTIONS[(siid, aiid)]:
+            raise DreameError(f"action {siid}/{aiid}={value!r} is not allowed")
+        params = {"did": str(did), "siid": siid, "aiid": aiid, "in": [{"piid": 1, "value": value}]}
+        result = await self._rpc(did, bind_domain, "action", params)
+        if isinstance(result, dict) and result.get("code") not in (0, None):
+            raise DreameError(f"device rejected action: {result!r}")

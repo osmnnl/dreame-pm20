@@ -125,6 +125,39 @@
       "auto_power_on": {
         "name": "Radarla otomatik başlama"
       }
+    },
+    "fan": {
+      "purifier": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "auto": "Akıllı Arıtma",
+              "pet": "Evcil Hayvan Temizliği",
+              "comfort": "Konfor"
+            }
+          }
+        }
+      }
+    },
+    "select": {
+      "swing": {
+        "name": "Salınım",
+        "state": {
+          "off": "OFF",
+          "follow": "Takip",
+          "45": "45°",
+          "90": "90°",
+          "180": "180°"
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "heater_guard": {
+      "message": "Açılmadı: cihazın son ayarında ısıtma açık olabilir. PM20'yi uygulamadan ya da cihazdan açın."
+    },
+    "write_failed": {
+      "message": "PM20 komutu reddetti: {error}"
     }
   }
 }

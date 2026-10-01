@@ -125,6 +125,39 @@
       "auto_power_on": {
         "name": "Radar auto start"
       }
+    },
+    "fan": {
+      "purifier": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "auto": "Smart purification",
+              "pet": "Pet cleaning",
+              "comfort": "Comfort"
+            }
+          }
+        }
+      }
+    },
+    "select": {
+      "swing": {
+        "name": "Swing",
+        "state": {
+          "off": "Off",
+          "follow": "Follow",
+          "45": "45°",
+          "90": "90°",
+          "180": "180°"
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "heater_guard": {
+      "message": "Not turning on: the heater may be active in the device's last settings. Turn the PM20 on from the app or the device."
+    },
+    "write_failed": {
+      "message": "PM20 rejected the command: {error}"
     }
   }
 }

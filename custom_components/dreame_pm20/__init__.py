@@ -1,4 +1,4 @@
-"""Dreame AirPursue PM20 — read-only Home Assistant integration (v0.1)."""
+"""Dreame AirPursue PM20 Home Assistant integration (heater is never controlled)."""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -13,7 +13,7 @@ from .api import DreameAuthError, DreameCloud, DreameError
 from .const import CONF_REGION, MODEL
 from .coordinator import PM20Coordinator
 
-PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.BINARY_SENSOR]
+PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.FAN, Platform.SELECT]
 
 
 @dataclass
