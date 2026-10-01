@@ -6,7 +6,7 @@ from typing import Any
 
 from homeassistant.components.fan import FanEntity, FanEntityFeature
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import HomeAssistantError
+from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util.percentage import percentage_to_ranged_value, ranged_value_to_percentage
 
@@ -65,7 +65,7 @@ class PM20Fan(PM20Entity, FanEntity):
         c = self.coordinator
         # The PM20 resumes its last settings on power-up, which could include heating.
         if self._d.get("power") != 1 and not await c.heater_candidates_off():
-            raise HomeAssistantError(translation_domain=DOMAIN, translation_key="heater_guard")
+            raise ServiceValidationError(translation_domain=DOMAIN, translation_key="heater_guard")
         if self._d.get("power") != 1:
             await self._guarded(c.cloud.call_action(c.did, c.bind_domain, 2, 1, 1))
             c.set_optimistic({"power": 1})

@@ -17,7 +17,7 @@ from typing import Any
 from homeassistant.components.climate import ClimateEntity, ClimateEntityFeature, HVACMode
 from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature
 from homeassistant.core import Event, HomeAssistant, callback
-from homeassistant.exceptions import HomeAssistantError
+from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_call_later, async_track_state_change_event
 
@@ -98,7 +98,8 @@ class PM20Heater(PM20Entity, ClimateEntity):
         return st.state == "home"
 
     def _refuse(self, key: str) -> None:
-        raise HomeAssistantError(translation_domain=DOMAIN, translation_key=key)
+        # A refusal is expected behaviour, not a failure: shown to the user as a validation error.
+        raise ServiceValidationError(translation_domain=DOMAIN, translation_key=key)
 
     async def _write(self, value: int) -> None:
         c = self.coordinator
@@ -123,7 +124,7 @@ class PM20Heater(PM20Entity, ClimateEntity):
 
     async def _off(self, reason: str) -> None:
         self._cancel_timer()
-        _LOGGER.info("PM20 heater off (%s)", reason)
+        _LOGGER.warning("PM20 heater turned off by Home Assistant (%s)", reason)
         await self._write(HEAT_OFF)
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
