@@ -10,8 +10,7 @@ from .entity import PM20Entity
 
 # key -> (value meaning "on", device_class, entity_category)
 _BINARY = {
-    "power": (1, BinarySensorDeviceClass.RUNNING, None),          # 1 on / 2 standby
-    "follow": (1, None, None),
+    "power": (1, BinarySensorDeviceClass.POWER, None),            # 1 on / 2 standby ("Açık" in the app)
     "auto_power_on": (1, None, EntityCategory.DIAGNOSTIC),
 }
 

@@ -76,9 +76,9 @@
         "name": "Baskın kirletici"
       },
       "mode": {
-        "name": "Arıtma seviyesi",
+        "name": "Mod",
         "state": {
-          "auto": "Otomatik",
+          "auto": "Akıllı Arıtma",
           "pet": "Evcil Hayvan",
           "comfort": "Konfor",
           "custom": "Özel",
@@ -86,10 +86,18 @@
         }
       },
       "fan_level": {
-        "name": "Hava akış hızı"
+        "name": "Fan hızı"
       },
       "swing_angle": {
-        "name": "Yatay salınım"
+        "name": "Salınım",
+        "state": {
+          "off": "OFF",
+          "follow": "Takip",
+          "45": "45°",
+          "90": "90°",
+          "180": "180°",
+          "unknown": "Bilinmiyor"
+        }
       },
       "off_timer": {
         "name": "Zamanlayıcı"
@@ -112,10 +120,7 @@
     },
     "binary_sensor": {
       "power": {
-        "name": "Çalışıyor"
-      },
-      "follow": {
-        "name": "Yönlü hava dağıtımı"
+        "name": "Güç"
       },
       "auto_power_on": {
         "name": "Radarla otomatik başlama"

@@ -60,7 +60,9 @@ SENSORS: tuple[PM20SensorDescription, ...] = (
     PM20SensorDescription(key="mode", device_class=SensorDeviceClass.ENUM,
                           options=[*MODE_NAMES.values(), "unknown"], value=_enum(MODE_NAMES)),
     PM20SensorDescription(key="fan_level", state_class=_M),
-    PM20SensorDescription(key="swing_angle", native_unit_of_measurement="°"),
+    # Matches the app's "Salınım" control: OFF / Takip (follow) / 45° / 90° / 180°.
+    PM20SensorDescription(key="swing_angle", device_class=SensorDeviceClass.ENUM,
+                          options=["off", "follow", "45", "90", "180", "unknown"]),
     PM20SensorDescription(key="off_timer", native_unit_of_measurement=UnitOfTime.HOURS),
     PM20SensorDescription(key="hepa_life", native_unit_of_measurement=PERCENTAGE, entity_category=EntityCategory.DIAGNOSTIC),
     PM20SensorDescription(key="hepa_days", native_unit_of_measurement=UnitOfTime.DAYS, entity_category=EntityCategory.DIAGNOSTIC),
@@ -90,6 +92,14 @@ class PM20Sensor(PM20Entity, SensorEntity):
 
     @property
     def native_value(self):
+        if self._key == "swing_angle":
+            data = self.coordinator.data or {}
+            if data.get("follow") == 1:
+                return "follow"
+            angle = data.get("swing_angle")
+            if angle in (None, 0):
+                return "off" if angle == 0 else None
+            return str(angle) if angle in (45, 90, 180) else "unknown"
         if self.entity_description.off_in_standby and (self.coordinator.data or {}).get("power") == 2:
             return None
         return self.entity_description.value(self.raw)

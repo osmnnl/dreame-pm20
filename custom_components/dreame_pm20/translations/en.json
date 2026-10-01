@@ -76,9 +76,9 @@
         "name": "Dominant pollutant"
       },
       "mode": {
-        "name": "Purification level",
+        "name": "Mode",
         "state": {
-          "auto": "Auto",
+          "auto": "Smart purification",
           "pet": "Pet",
           "comfort": "Comfort",
           "custom": "Custom",
@@ -86,10 +86,18 @@
         }
       },
       "fan_level": {
-        "name": "Airflow speed"
+        "name": "Fan speed"
       },
       "swing_angle": {
-        "name": "Horizontal swing"
+        "name": "Swing",
+        "state": {
+          "off": "Off",
+          "follow": "Follow",
+          "45": "45°",
+          "90": "90°",
+          "180": "180°",
+          "unknown": "Unknown"
+        }
       },
       "off_timer": {
         "name": "Timer"
@@ -112,10 +120,7 @@
     },
     "binary_sensor": {
       "power": {
-        "name": "Running"
-      },
-      "follow": {
-        "name": "Directional air delivery"
+        "name": "Power"
       },
       "auto_power_on": {
         "name": "Radar auto start"
