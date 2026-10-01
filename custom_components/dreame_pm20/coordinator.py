@@ -11,7 +11,7 @@ from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import DreameAuthError, DreameCloud, DreameError
-from .const import DOMAIN, PROPS, SCAN_INTERVAL
+from .const import DOMAIN, EXTRA_ADDRESSES, PROPS, SCAN_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ class PM20Coordinator(DataUpdateCoordinator[dict[str, Any]]):
         self.device = device
         self.did = str(device["did"])
         self.bind_domain = device.get("bindDomain")
-        self._addresses = [(p.siid, p.piid) for p in PROPS]
+        self._addresses = [(p.siid, p.piid) for p in PROPS] + list(EXTRA_ADDRESSES)
         # key -> (value, expires_at). The cloud lags the device by up to minutes after a
         # write, so keep the written value until a poll agrees or it expires.
         self._optimistic: dict[str, tuple[object, float]] = {}
@@ -57,6 +57,9 @@ class PM20Coordinator(DataUpdateCoordinator[dict[str, Any]]):
         for prop in PROPS:
             if (prop.siid, prop.piid) in raw:
                 data[prop.key] = raw[(prop.siid, prop.piid)]
+        raw_extra = dict(data.get("raw") or {})
+        raw_extra.update({f"{s},{p}": v for (s, p), v in raw.items() if (s, p) in EXTRA_ADDRESSES})
+        data["raw"] = raw_extra
         now = time.monotonic()
         for key, (val, exp) in list(self._optimistic.items()):
             if now > exp or data.get(key) == val:

@@ -65,6 +65,13 @@ PROPS: tuple[Prop, ...] = (
 
 PROP_BY_KEY = {p.key: p for p in PROPS}
 
+# Every address the 2026-10-01 sweep found readable that is not mapped above.
+# Read-only, exposed only in diagnostics ("raw"), used to locate the heater.
+EXTRA_ADDRESSES: tuple[tuple[int, int], ...] = (
+    (1, 5), (2, 5), (2, 6), (2, 8), (3, 9), (3, 11), (3, 12),
+    (6, 1), (6, 2), (6, 3), (6, 4), (6, 7), (6, 14), (6, 15),
+)
+
 MODE_NAMES = {0: "auto", 3: "custom", 4: "pet", 5: "comfort"}  # 0, 3, 5 confirmed on PM20 (2026-10-01)
 # Levels as named in the PM20 manual: excellent, good, mild pollution, heavy pollution.
 AIR_QUALITY_NAMES = {1: "excellent", 2: "good", 3: "mild_pollution", 4: "heavy_pollution"}
