@@ -100,6 +100,8 @@ class PM20Sensor(PM20Entity, SensorEntity):
             if angle in (None, 0):
                 return "off" if angle == 0 else None
             return str(angle) if angle in (45, 90, 180) else "unknown"
-        if self.entity_description.off_in_standby and (self.coordinator.data or {}).get("power") == 2:
+        d = self.coordinator.data or {}
+        # In standby the air sensors are off (reported as 0) unless "Sürekli İzleme" is on.
+        if self.entity_description.off_in_standby and d.get("power") == 2 and d.get("continuous_monitoring") != 1:
             return None
         return self.entity_description.value(self.raw)

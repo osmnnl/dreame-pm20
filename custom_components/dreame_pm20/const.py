@@ -58,7 +58,8 @@ PROPS: tuple[Prop, ...] = (
     Prop("carbon_life", 4, 3, "H"),      # %
     Prop("carbon_days", 4, 4, "H"),
     Prop("off_timer", 6, 8, "M"),        # hours 0-12
-    Prop("auto_power_on", 6, 19, "M"),   # radar auto start (manual: TR says default ON)
+    Prop("auto_power_on", 6, 19, "H"),   # app: "Otomatik Güç Açma" (radar, 2 m / 5 s) — confirmed
+    Prop("continuous_monitoring", 6, 15, "H"),  # app: "Sürekli İzleme" — sensors keep measuring in standby
     Prop("follow", 6, 20, "M"),          # airflow follows person
     Prop("firmware", 1, 4, "M"),
 )
@@ -69,7 +70,7 @@ PROP_BY_KEY = {p.key: p for p in PROPS}
 # Read-only, exposed only in diagnostics ("raw"), used to locate the heater.
 EXTRA_ADDRESSES: tuple[tuple[int, int], ...] = (
     (1, 5), (2, 5), (2, 6), (2, 8), (3, 9), (3, 11), (3, 12),
-    (6, 1), (6, 2), (6, 3), (6, 4), (6, 7), (6, 14), (6, 15),
+    (6, 1), (6, 2), (6, 3), (6, 4), (6, 7), (6, 14),
 )
 # Heater (confirmed 2026-10-01 by app diffs): 2,6 = heat target °C, -1 = heating off.
 HEAT_TARGET = (2, 6)
