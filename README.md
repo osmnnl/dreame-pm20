@@ -7,7 +7,7 @@ Unofficial Home Assistant integration for the Dreame AirPursue PM20 air purifier
   - **Sensors:** PM2.5, PM10, PM1, HCHO, TVOC, temperature, humidity, air quality level, dominant pollutant
   - **Device state:** mode, fan level, swing angle, off timer, running, follow-me, radar auto start
   - **Filters:** HEPA and carbon filter life and days left
-- **Control (v0.3, experimental):** a fan entity (power, speed 1–10, presets Smart purification / Pet cleaning / Comfort) and a swing select (Off / Follow / 45° / 90° / 180°).
+- **Control (v0.3, verified on a real PM20, fw 1.8.17_1070):** a fan entity (power, speed 1–10, presets Smart purification / Pet cleaning / Comfort) and a swing select (Off / Follow / 45° / 90° / 180°).
   - Writes are limited to a strict allow-list; everything else is refused before a request is sent.
   - **The heater is never controlled.** Heater-related addresses are not in the allow-list.
   - Because the PM20 resumes its last settings on power-up, turning it on from Home Assistant is refused unless both heater-candidate properties read "off".
