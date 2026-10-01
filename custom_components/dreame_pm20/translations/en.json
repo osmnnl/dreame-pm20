@@ -79,7 +79,7 @@
         "name": "Mode",
         "state": {
           "auto": "Smart purification",
-          "pet": "Pet",
+          "pet": "Pet cleaning",
           "comfort": "Comfort",
           "custom": "Custom",
           "unknown": "Unknown"
