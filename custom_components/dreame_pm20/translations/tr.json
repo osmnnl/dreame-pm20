@@ -164,9 +164,15 @@
     "write_failed": {
       "message": "PM20 komutu reddetti: {error}"
     },
-    "heater_disabled": "Isıtıcıyı HA'dan kontrol etme kapalı. Entegrasyon seçeneklerinden açın.",
-    "heater_nobody_home": "Isıtıcı açılmadı: evde kimse yok.",
-    "heater_device_off": "Önce PM20'yi açın."
+    "heater_disabled": {
+      "message": "Isıtıcıyı HA'dan kontrol etme kapalı. Entegrasyon seçeneklerinden açın."
+    },
+    "heater_nobody_home": {
+      "message": "Isıtıcı açılmadı: evde kimse yok."
+    },
+    "heater_device_off": {
+      "message": "Önce PM20'yi açın."
+    }
   },
   "options": {
     "step": {
