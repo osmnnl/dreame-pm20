@@ -78,6 +78,7 @@ HEAT_MIN_C = 16
 HEAT_MAX_C = 26            # our own cap; the device allows up to 40 °C
 HEAT_MAX_MINUTES = 120     # auto-off after this long
 CONF_ALLOW_HEATER = "allow_heater"
+CONF_MAX_MINUTES = "max_minutes"
 CONF_PRESENCE_ENTITY = "presence_entity"
 DEFAULT_PRESENCE_ENTITY = "zone.home"
 

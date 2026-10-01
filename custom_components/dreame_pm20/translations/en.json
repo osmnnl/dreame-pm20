@@ -178,10 +178,11 @@
     "step": {
       "init": {
         "title": "PM20 options",
-        "description": "Heater control is off by default. When enabled, heating can only be turned on while someone is home, is capped at 26 °C and switches off automatically after 2 hours or when everyone leaves.",
+        "description": "Heater control is off by default. When enabled, heating can only be turned on while someone is home, is capped at 26 °C and switches off automatically after the maximum heating time (default 2 hours) or when everyone leaves.",
         "data": {
           "allow_heater": "Allow heater control from Home Assistant",
-          "presence_entity": "Presence entity (zone.home = someone home)"
+          "presence_entity": "Presence entity (zone.home = someone home)",
+          "max_minutes": "Maximum heating time (minutes)"
         }
       }
     }

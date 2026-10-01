@@ -5,7 +5,7 @@ Safety rules (enforced here, so they cover every automation, script and voice co
 - Turning heat ON is refused unless the presence entity says someone is home
   (zone.home > 0 or a person/device_tracker "home"); unknown means refused.
 - Target is capped at HEAT_MAX_C (26 °C).
-- Heat is switched off automatically after HEAT_MAX_MINUTES, when everyone leaves,
+- Heat is switched off automatically after the configured max time (default 120 min, max 240), when everyone leaves,
   and at startup if it is on while nobody is home.
 - Turning heat OFF is always allowed.
 """
@@ -22,7 +22,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_call_later, async_track_state_change_event
 
 from .api import DreameError
-from .const import (CONF_ALLOW_HEATER, CONF_PRESENCE_ENTITY, DEFAULT_PRESENCE_ENTITY, DOMAIN, HEAT_MAX_C,
+from .const import (CONF_ALLOW_HEATER, CONF_MAX_MINUTES, CONF_PRESENCE_ENTITY, DEFAULT_PRESENCE_ENTITY, DOMAIN, HEAT_MAX_C,
                     HEAT_MAX_MINUTES, HEAT_MIN_C, HEAT_OFF, HEAT_TARGET)
 from .entity import PM20Entity
 
@@ -75,12 +75,16 @@ class PM20Heater(PM20Entity, ClimateEntity):
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
-        return {"control_allowed": self._allowed, "max_minutes": HEAT_MAX_MINUTES}
+        return {"control_allowed": self._allowed, "max_minutes": self._max_minutes}
 
     # ── guards ───────────────────────────────────────────────────────
     @property
     def _allowed(self) -> bool:
         return bool(self._entry.options.get(CONF_ALLOW_HEATER, False))
+
+    @property
+    def _max_minutes(self) -> int:
+        return int(self._entry.options.get(CONF_MAX_MINUTES, HEAT_MAX_MINUTES))
 
     @property
     def _presence_entity(self) -> str:
@@ -150,7 +154,7 @@ class PM20Heater(PM20Entity, ClimateEntity):
     # ── watchdogs ────────────────────────────────────────────────────
     def _arm_timer(self) -> None:
         self._cancel_timer()
-        self._timer = async_call_later(self.hass, HEAT_MAX_MINUTES * 60, self._timeout)
+        self._timer = async_call_later(self.hass, self._max_minutes * 60, self._timeout)
 
     def _cancel_timer(self) -> None:
         if self._timer:
@@ -160,7 +164,7 @@ class PM20Heater(PM20Entity, ClimateEntity):
     async def _timeout(self, _now) -> None:
         self._timer = None
         if self.hvac_mode == HVACMode.HEAT:
-            await self._off(f"max {HEAT_MAX_MINUTES} min")
+            await self._off(f"max {self._max_minutes} min")
 
     async def async_added_to_hass(self) -> None:
         await super().async_added_to_hass()

@@ -10,10 +10,11 @@ from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResu
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.core import callback
-from homeassistant.helpers.selector import EntitySelector, EntitySelectorConfig, SelectSelector, SelectSelectorConfig
+from homeassistant.helpers.selector import (EntitySelector, EntitySelectorConfig, NumberSelector, NumberSelectorConfig,
+                                            NumberSelectorMode, SelectSelector, SelectSelectorConfig)
 
 from .api import DreameAuthError, DreameCloud, DreameError
-from .const import (CONF_ALLOW_HEATER, CONF_PRESENCE_ENTITY, CONF_REGION, DEFAULT_PRESENCE_ENTITY, DEFAULT_REGION,
+from .const import (CONF_ALLOW_HEATER, CONF_MAX_MINUTES, CONF_PRESENCE_ENTITY, CONF_REGION, DEFAULT_PRESENCE_ENTITY, DEFAULT_REGION,
                     DOMAIN, MODEL, REGIONS)
 
 
@@ -90,5 +91,8 @@ class PM20OptionsFlow(OptionsFlow):
         return self.async_show_form(step_id="init", data_schema=vol.Schema({
             vol.Required(CONF_ALLOW_HEATER, default=opts.get(CONF_ALLOW_HEATER, False)): bool,
             vol.Required(CONF_PRESENCE_ENTITY, default=opts.get(CONF_PRESENCE_ENTITY, DEFAULT_PRESENCE_ENTITY)):
-                EntitySelector(EntitySelectorConfig(domain=["zone", "person", "device_tracker", "binary_sensor"])),
+                EntitySelector(EntitySelectorConfig(domain=["zone", "person", "device_tracker", "binary_sensor", "input_select"])),
+            vol.Required(CONF_MAX_MINUTES, default=opts.get(CONF_MAX_MINUTES, 120)): vol.All(
+                NumberSelector(NumberSelectorConfig(min=1, max=240, step=1, mode=NumberSelectorMode.BOX,
+                                                    unit_of_measurement="min")), vol.Coerce(int)),
         }))

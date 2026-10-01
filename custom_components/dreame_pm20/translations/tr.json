@@ -178,10 +178,11 @@
     "step": {
       "init": {
         "title": "PM20 seçenekleri",
-        "description": "Isıtıcı kontrolü varsayılan olarak kapalıdır. Açılırsa ısıtma sadece evde biri varken açılabilir, en fazla 26 °C olur ve 2 saat sonra ya da herkes evden çıkınca kendiliğinden kapanır.",
+        "description": "Isıtıcı kontrolü varsayılan olarak kapalıdır. Açılırsa ısıtma sadece evde biri varken açılabilir, en fazla 26 °C olur ve en uzun ısıtma süresi (varsayılan 2 saat) dolunca ya da herkes evden çıkınca kendiliğinden kapanır.",
         "data": {
           "allow_heater": "Isıtıcıyı HA'dan kontrol etmeye izin ver",
-          "presence_entity": "Varlık varlığı (zone.home = evde biri var)"
+          "presence_entity": "Varlık varlığı (zone.home = evde biri var)",
+          "max_minutes": "En uzun ısıtma süresi (dakika)"
         }
       }
     }
